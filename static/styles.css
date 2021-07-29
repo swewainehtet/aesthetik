@@ -1,0 +1,62 @@
+nav .navbar-brand
+{
+    font-family: 'Zen Tokyo Zoo', sans-serif;
+    font-size: xx-large;
+}
+
+
+navbar
+{
+     background-color: black;
+}
+
+main .form-control
+{
+    /* Center form controls */
+    display: inline-block;
+
+    /* Override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+main
+{
+    /* Scroll horizontally as needed */
+    overflow-x: auto;
+
+    /* Center contents */
+    text-align: center;
+}
+
+main img
+{
+    /* Constrain images on small screens */
+    max-width: 100%;
+}
+
+body
+{
+    background-color: ghostwhite;
+    font-family: 'Lato', sans-serif;
+}
+
+.adlabel {
+  color: white;
+  text-shadow: 1px -1px 5px #000000;
+}
+
+.storeimg {
+    height: auto;
+    max-width: 10vw;
+    /*max-width: 100%;*/
+    margin: auto;
+}
+
+.item {
+    padding-bottom: 30px
+}
+
+.icon {
+    height: auto;
+    max-width: 5vw;
+}

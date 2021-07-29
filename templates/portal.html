@@ -1,0 +1,190 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{store.name}} Settings
+{% endblock %}
+
+{% block main %}
+    <h2>Seller Portal</h2>
+    <hr/>
+    <h5>Store Info</h5>
+    <table class="table table-sm table-bordered table-striped w-50 mx-auto">
+      <tbody>
+        <tr>
+          <th scope="row">Name</th>
+          <td>{{store.name}}</td>
+        </tr>
+        <tr>
+          <th scope="row">URL</th>
+          <td>{{store.url}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Category</th>
+          <td>{{store.category}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Phone Number</th>
+          <td>{{store.phonenumber}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <h6><a href="/setup" class="link-dark" style="color: red;">[Reset Store Info]</a></h6>
+    <hr/>
+    <h5>Add Item</h5>
+    <form action="/portal" method="post">
+        <div class="form-group">
+            <input autocomplete="off" required class="form-control" style="width: 50%;" name="name" placeholder="Product Name *" type="text">
+        </div>
+        <div class="form-group">
+            <textarea autocomplete="off" required class="form-control" style="width: 50%;" name="description" placeholder="Product Description *" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" required class="form-control" style="width: 50%;" name="price" placeholder="Price *($)" type="text" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$">
+            <!-- data-type="currency"-->
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" class="form-control" style="width: 50%;" name="discount" placeholder="Discount (%) (Optional)" type="number" min="0" max="100">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" required class="form-control" style="width: 50%;" name="quantity" placeholder="Quantity *" type="number" min="1">
+        </div>
+        <button class="btn btn-dark" type="submit">Add Item</button>
+    </form>
+    <hr/>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="table-wrap">
+            <table class="table" style="text-align: left">
+              <thead class="thead-dark">
+                <h5>Inventory</h5>
+                <tr>
+                  <th>ID</th>
+                  <th>&nbsp;</th>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Discount</th>
+                  <th>Net</th>
+                  <th>Quantity</th>
+                  <th>&nbsp;</th>
+                </tr>
+                {% for item in items %}
+                <tr>
+                  <td><em>#{{ '%06d' % item.id}}</em></td>
+                  <td><img src="{{item.img}}" class="icon"></td>
+                  <td><b>{{item.name}}</b><br><em>{{item.description}}</em></td>
+                  <td>{{item.price | usd}}</td>
+                  <td>{{item.discount}}%</td>
+                  <td>{{(item.price * (1 - (item.discount / 100))) | usd}}</td>
+                  <td>{{item.quantity}}</td>
+                  <td>
+                    <button class="btn btn-dark bm-4 py-1">
+                      <a href="/remove/{{item.id}}" style="color: white;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-backspace" viewBox="0 0 16 16">
+                          <path d="M5.83 5.146a.5.5 0 0 0 0 .708L7.975 8l-2.147 2.146a.5.5 0 0 0 .707.708l2.147-2.147 2.146 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z"/>
+                          <path d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1h7.08zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1h-7.08z"/>
+                        </svg>
+                      </a>
+                    </button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </thead>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!--DOLLAR CURRENCY SCRIPT-->
+    <script>
+    // Jquery Dependency
+
+    $("input[data-type='currency']").on({
+        keyup: function() {
+          formatCurrency($(this));
+        },
+        blur: function() {
+          formatCurrency($(this), "blur");
+        }
+    });
+
+
+    function formatNumber(n) {
+      // format number 1000000 to 1,234,567
+      return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    }
+
+
+    function formatCurrency(input, blur) {
+      // appends $ to value, validates decimal side
+      // and puts cursor back in right position.
+
+      // get input value
+      var input_val = input.val();
+
+      // don't validate empty input
+      if (input_val === "") { return; }
+
+      // original length
+      var original_len = input_val.length;
+
+      // initial caret position
+      var caret_pos = input.prop("selectionStart");
+
+      // check for decimal
+      if (input_val.indexOf(".") >= 0) {
+
+        // get position of first decimal
+        // this prevents multiple decimals from
+        // being entered
+        var decimal_pos = input_val.indexOf(".");
+
+        // split number by decimal point
+        var left_side = input_val.substring(0, decimal_pos);
+        var right_side = input_val.substring(decimal_pos);
+
+        // add commas to left side of number
+        left_side = formatNumber(left_side);
+
+        // validate right side
+        right_side = formatNumber(right_side);
+
+        // On blur make sure 2 numbers after decimal
+        if (blur === "blur") {
+          right_side += "00";
+        }
+
+        // Limit decimal to only 2 digits
+        right_side = right_side.substring(0, 2);
+
+        // join number by .
+        input_val = "$" + left_side + "." + right_side;
+
+      } else {
+        // no decimal entered
+        // add commas to number
+        // remove all non-digits
+        input_val = formatNumber(input_val);
+        input_val = "$" + input_val;
+
+        // final formatting
+        if (blur === "blur") {
+          input_val += ".00";
+        }
+      }
+
+      // send updated string to input
+      input.val(input_val);
+
+      // put caret back in the right position
+      var updated_len = input_val.length;
+      caret_pos = updated_len - original_len + caret_pos;
+      input[0].setSelectionRange(caret_pos, caret_pos);
+    }
+
+    </script>
+{% endblock %}

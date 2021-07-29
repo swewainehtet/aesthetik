@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{store.name}}
+{% endblock %}
+
+{% block main %}
+    <div class="row py-1">
+      <div class="col-lg-12 mx-auto">
+        <div class="p-3 shadow-sm rounded banner">
+          <img src="{{logo}}" class="icon rounded-circle">
+          <h1 class="display-4">{{store.name}}</h1>
+          <p class="lead">{{store.category}}</p>
+          <p class="lead">
+             Contact:
+             {{store.phonenumber}}
+          </p>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="row py-5">
+      {% if items|length %}
+      {% else %}
+      <h5 class="display-5 mx-auto"><em>No listings yet</em></h5>
+      {% endif %}
+      {% for item in items %}
+      <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="bg-white rounded shadow-sm"><img src="{{item.img}}" alt="" class="img-fluid py-2 card-img-top icon">
+          <div class="p-4">
+            <h5><a href="/product/{{item.id}}" class="text-dark">{{item.name}}</a></h5>
+            <p class="small text-muted mb-0">{{item.description}}</p>
+            <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
+              <p class="small mb-0"><i class="fa fa-picture-o mr-auto"></i><span class="font-weight-bold">{{item.price | usd}}</span></p>
+              {%if item.quantity <= 0 %}
+              <button type="button" class="btn btn-sm btn-dark py-1" disabled>Sold Out</button>
+              {% else %}
+              {% if item.discount != 0 %}
+              <div class="badge badge-danger px-auto rounded-pill font-weight-normal">{{item.discount}} % off!</div>
+              {% endif %}
+              <button class="btn btn-sm btn-dark py-1"><a href="/buy/{{item.id}}" style="color:white;">Buy</a></button>
+              {% endif %}
+            </div>
+          </div>
+
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <style>
+        .banner {
+          background: {{maincolor}};
+          background: -webkit-linear-gradient(to right, {{maincolor}}, azure, {{maincolor}});
+          background: linear-gradient(to right, {{maincolor}}, azure, {{maincolor}});
+        }
+    </style>
+{% endblock %}

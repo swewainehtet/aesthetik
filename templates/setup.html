@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Set up your store
+{% endblock %}
+
+{% block main %}
+    <h3>Looks like it's your first time here.
+    <br>Set up your store now!</h3>
+    <br>
+    <form action="/setup" method="post">
+        <div class="form-group">
+            <input autocomplete="off" required autofocus class="form-control" name="name" placeholder="Store Name" type="text">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" required class="form-control" name="url" placeholder="Store URL" type="text">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" required class="form-control" name="phonenumber" placeholder="Phone Number" type="tel">
+        </div>
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select class="form-control" name="category">
+                <option value="Clothing">Clothing</option>
+                <option value="Sneakers">Sneakers</option>
+                <option value="Pet Store">Pet Store</option>
+            </select>
+
+        </div>
+
+        <button class="btn btn-dark" type="submit">Set Up</button>
+    </form>
+{% endblock %}
